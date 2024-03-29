@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit
+  m_Name: Unlit_Yellow
   m_Shader: {fileID: 4800000, guid: 2a2ccaa4f68d9964eb637e2ffa5ac42e, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
