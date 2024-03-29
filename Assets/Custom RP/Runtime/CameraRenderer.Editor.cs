@@ -20,6 +20,8 @@ public partial class CameraRenderer
     private partial void DrawUnsupportedShaders();
     private partial void DrawGizmos();
 
+    private partial void PrepareForSceneWindow();
+
     private const string errorShaderName = "Hidden/InternalErrorShader";
 
 #if UNITY_EDITOR
@@ -49,6 +51,14 @@ public partial class CameraRenderer
         {
             context.DrawGizmos(camera, GizmoSubset.PreImageEffects);
             context.DrawGizmos(camera, GizmoSubset.PostImageEffects);
+        }
+    }
+
+    private partial void PrepareForSceneWindow()
+    {
+        if (camera.cameraType == CameraType.SceneView)
+        {
+            ScriptableRenderContext.EmitWorldGeometryForSceneView(camera);
         }
     }
 #endif
