@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class CameraRenderer
+public partial class CameraRenderer
 {
+    // Only supports unlit shaders passes.
     private static ShaderTagId unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit");
-    
+
     private ScriptableRenderContext context;
     private Camera camera;
 
@@ -28,9 +27,12 @@ public class CameraRenderer
         {
             return;
         }
-        
+
         Setup();
         DrawVisibleGeometry();
+#if UNITY_EDITOR
+        DrawUnsupportedShaders();
+#endif
         Submit();
     }
 
@@ -44,13 +46,25 @@ public class CameraRenderer
 
     private void DrawVisibleGeometry()
     {
-        var sortingSettings = new SortingSettings(camera);
+        var sortingSettings = new SortingSettings(camera)
+        {
+            criteria = SortingCriteria.CommonOpaque
+        };
+
+        // First render opaque objects.
         var drawingSettings = new DrawingSettings(unlitShaderTagId, sortingSettings);
-        var filteringSettings = new FilteringSettings(RenderQueueRange.all);
-        
+        var filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
         context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
-        
+
+        //  After render skybox.
         context.DrawSkybox(camera);
+
+        // Last render transparent objects.
+        sortingSettings.criteria = SortingCriteria.CommonTransparent;
+        drawingSettings.sortingSettings = sortingSettings;
+        filteringSettings.renderQueueRange = RenderQueueRange.transparent;
+
+        context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
     }
 
     private void Submit()
