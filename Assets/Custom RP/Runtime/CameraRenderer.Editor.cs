@@ -1,11 +1,13 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 
 public partial class CameraRenderer
 {
 #if UNITY_EDITOR
     private static Material errorMaterial;
+
     private static ShaderTagId[] legacyShaderTagIds =
     {
         new ShaderTagId("Always"),
@@ -15,6 +17,7 @@ public partial class CameraRenderer
         new ShaderTagId("VertexLMRGBM"),
         new ShaderTagId("VertexLM"),
     };
+
 #endif
 
     private partial void DrawUnsupportedShaders();
@@ -23,6 +26,8 @@ public partial class CameraRenderer
     private partial void PrepareForSceneWindow();
 
     private const string errorShaderName = "Hidden/InternalErrorShader";
+
+    private partial void PrepareBuffer();
 
 #if UNITY_EDITOR
     private partial void DrawUnsupportedShaders()
@@ -61,5 +66,16 @@ public partial class CameraRenderer
             ScriptableRenderContext.EmitWorldGeometryForSceneView(camera);
         }
     }
+
+    private string SampleName { get; set; }
+
+    private partial void PrepareBuffer()
+    {
+        Profiler.BeginSample("Editor Only");
+        buffer.name = SampleName = camera.name;
+        Profiler.EndSample();
+    }
+#else
+    const string SampleName = bufferName;
 #endif
 }
