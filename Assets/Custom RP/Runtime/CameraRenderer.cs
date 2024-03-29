@@ -33,6 +33,8 @@ public partial class CameraRenderer
 #if UNITY_EDITOR
         DrawUnsupportedShaders();
 #endif
+        // Draw gizmos after everything else.
+        DrawGizmos();
         Submit();
     }
 
