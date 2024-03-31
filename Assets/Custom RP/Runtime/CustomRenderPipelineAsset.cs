@@ -6,6 +6,15 @@ using UnityEngine.Rendering;
 [CreateAssetMenu(menuName = "Rendering/Custom Render Pipeline")]
 public class CustomRenderPipelineAsset : RenderPipelineAsset
 {
+
+    [SerializeField]
+    public bool useDynamicBatching = true;
+    [SerializeField]
+    public bool useGPUInstancing = true;
+    [SerializeField]
+    public bool useSRPBatcher = true;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +29,6 @@ public class CustomRenderPipelineAsset : RenderPipelineAsset
 
     protected override RenderPipeline CreatePipeline()
     {
-        return new CustomRenderPipeline();
+        return new CustomRenderPipeline(useDynamicBatching, useGPUInstancing, useSRPBatcher);
     }
 }
