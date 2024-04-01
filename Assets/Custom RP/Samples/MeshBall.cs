@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class MeshBall : MonoBehaviour
 {
     private static int baseColorId = Shader.PropertyToID("_BaseColor");
+    private static int cutoffId = Shader.PropertyToID("_Cutoff");
 
     [SerializeField]
     public Mesh mesh = default;
